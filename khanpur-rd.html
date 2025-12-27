@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khanpur Road | Local Mart</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛒</text></svg>">
+  <style>
+        :root { --brand: #10B981; --dark: #1F2937; --light-bg: #F9FAFB; --white: #FFFFFF; }
+        * { box-sizing: border-box; transition: 0.2s; }
+        body { font-family: 'Inter', sans-serif; background: var(--light-bg); margin: 0; padding: 0; }
+        
+        /* Navigation */
+        nav { background: var(--white); border-bottom: 1px solid #E5E7EB; padding: 15px 5%; display: flex; align-items: center; justify-content: space-between; }
+        .back-link { text-decoration: none; color: var(--dark); font-weight: 600; display: flex; align-items: center; gap: 5px; }
+        .logo { font-weight: 700; color: var(--brand); text-decoration: none; font-size: 1.2rem; }
+
+        /* Header */
+        .area-header { background: var(--dark); color: white; padding: 60px 5%; text-align: center; }
+        .area-header h1 { margin: 0; font-size: 2rem; }
+        .area-header p { color: #9CA3AF; margin-top: 10px; }
+
+        .container { max-width: 1100px; margin: 40px auto; padding: 0 15px; }
+
+        /* Grid */
+        .shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
+        .shop-card { background: var(--white); border-radius: 12px; overflow: hidden; border: 1px solid #E5E7EB; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .shop-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px rgba(0,0,0,0.1); }
+        .shop-img { width: 100%; height: 180px; object-fit: cover; background: #eee; }
+        .shop-body { padding: 20px; }
+        .shop-name { font-size: 1.2rem; margin: 0 0 10px 0; font-weight: 600; color: var(--dark); }
+        .shop-type { font-size: 0.8rem; color: var(--brand); font-weight: 700; text-transform: uppercase; margin-bottom: 8px; display: block; }
+        .order-btn { display: block; text-align: center; background: var(--brand); color: white; text-decoration: none; padding: 12px; border-radius: 8px; font-weight: 600; }
+        .order-btn:hover { background: #059669; }
+
+        footer { background: var(--dark); color: white; text-align: center; padding: 30px; margin-top: 60px; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="index.html" class="back-link">← Back</a>
+    <a href="index.html" class="logo">LOCAL MART</a>
+    <div style="width: 50px;"></div>
+</nav>
+
+<div class="area-header">
+    <h1>Khanpur Road Heritage</h1>
+    <p>Handicrafts, Fruit Orchards, and History</p>
+</div>
+
+<div class="container">
+    <div class="shop-grid" id="fullGrid">
+        </div>
+</div>
+
+<footer>&copy; 2025 Local Mart Taxila | ICT Project</footer>
+
+<script>
+    // DATA FOR KHANPUR ROAD AREA
+    const khanpurShops = [
+{ name: "Taxila Electronics", type: "Electronics", img: "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=500" },
+        { name: "City Garments", type: "Clothing", img: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=500" },
+        { name: "Al-Makkah General Store", type: "Grocery", img: "https://images.unsplash.com/photo-1534723452862-4c874018d66d?w=500" },
+        { name: "New Fancy Jewelers", type: "Jewelry", img: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&q=80&w=500" },
+        { name: "Bata Shoes", type: "Footwear", img: "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=500" },
+        { name: "Citizen Watch House", type: "Watches", img: "https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=500" },
+        { name: "Saddar Furniture", type: "Home", img: "https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=500" },
+        { name: "Moon Gift Center", type: "Gifts", img: "https://images.unsplash.com/photo-1513201099705-a9746e1e201f?w=500" },
+        { name: "Punjab Bakers", type: "Bakery", img: "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500" }
+    ];
+
+    const grid = document.getElementById('fullGrid');
+    grid.innerHTML = khanpurShops.map(shop => `
+        <div class="shop-card">
+            <img src="${shop.img}" class="shop-img" alt="${shop.name}">
+            <div class="shop-body">
+                <span class="shop-type">${shop.type}</span>
+                <h4 class="shop-name">${shop.name}</h4>
+                <a href="shop-detail.html" class="order-btn">View Menu/Items</a>
+            </div>
+        </div>
+    `).join('');
+</script>
+
+</body>
+</html>

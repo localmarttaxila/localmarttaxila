@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Mart | Taxila</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛒</text></svg>">
+    <style>
+        :root {
+            --brand: #10B981;
+            --dark: #1F2937;
+            --light-bg: #F9FAFB;
+            --white: #FFFFFF;
+            --text-main: #111827;
+            --text-muted: #6B7280;
+        }
+
+        * { box-sizing: border-box; transition: all 0.2s ease-in-out; }
+        body { font-family: 'Inter', sans-serif; background: var(--light-bg); color: var(--text-main); margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh; }
+        
+        nav { background: var(--white); border-bottom: 1px solid #E5E7EB; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .logo { font-weight: 700; font-size: 1.3rem; color: var(--brand); letter-spacing: -1px; text-decoration: none; }
+
+        .hero { background: var(--dark); color: white; padding: 40px 5% 80px 5%; text-align: center; }
+        .hero h1 { font-size: 1.8rem; margin-bottom: 10px; }
+        .hero p { color: #9CA3AF; font-size: 1rem; }
+
+        .main-content { flex: 1; }
+        .container { max-width: 1100px; margin: -40px auto 50px auto; padding: 0 15px; }
+
+        .filter-card { background: var(--white); padding: 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); text-align: center; margin-bottom: 30px; }
+        select { width: 100%; max-width: 350px; padding: 12px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 1rem; cursor: pointer; }
+
+        .shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        @media (max-width: 600px) { .shop-grid { grid-template-columns: 1fr; } }
+
+        .shop-card { background: var(--white); border-radius: 12px; overflow: hidden; border: 1px solid #F3F4F6; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .shop-img { width: 100%; height: 180px; object-fit: cover; background: #e5e7eb; display: block; }
+        .shop-body { padding: 15px; }
+        .area-tag { font-size: 0.7rem; font-weight: 700; color: var(--brand); text-transform: uppercase; margin-bottom: 5px; display: block; }
+        .shop-name { font-size: 1.1rem; margin: 0 0 12px 0; font-weight: 600; height: 2.2em; overflow: hidden; }
+        .visit-btn { width: 100%; background: var(--brand); color: white; border: none; padding: 10px; border-radius: 6px; font-weight: 600; cursor: pointer; text-decoration: none; display: block; text-align: center; }
+        .visit-btn:hover { background: #059669; }
+
+        .see-more-wrapper { text-align: center; margin-top: 40px; display: none; }
+        .see-more-btn { background: var(--dark); color: white; padding: 12px 30px; border-radius: 8px; text-decoration: none; font-weight: 600; display: inline-block; }
+
+        footer { background: var(--dark); color: #D1D5DB; padding: 40px 5% 20px 5%; margin-top: auto; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; max-width: 1100px; margin: 0 auto; }
+        .footer-col h4 { color: white; margin-bottom: 15px; }
+        .footer-col ul { list-style: none; padding: 0; }
+        .footer-col ul li { margin-bottom: 10px; }
+        .footer-col ul li a { color: #9CA3AF; text-decoration: none; font-size: 0.9rem; }
+        .footer-bottom { border-top: 1px solid #374151; margin-top: 30px; padding-top: 20px; text-align: center; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="index.html" class="logo">LOCAL MART</a>
+    <div style="font-size: 0.8rem; color: var(--text-muted);">Taxila Hub</div>
+</nav>
+
+<div class="main-content">
+    <div class="hero">
+        <h1>Your Neighborhood, Delivered.</h1>
+        <p>Bringing the best of Taxila streets to your doorstep.</p>
+    </div>
+
+    <div class="container">
+        <div class="filter-card">
+            <select id="streetSelect" onchange="updateView()">
+                <option value="all">All Featured Shops</option>
+                <option value="main-bazaar">Main Bazaar / Landa Bazaar</option>
+                <option value="gt-road">GT Road / Wah Cantt</option>
+                <option value="khanpur-rd">Khanpur Road</option>
+                <option value="uet-area">UET Taxila Area</option>
+            </select>
+        </div>
+
+        <div id="shopGrid" class="shop-grid"></div>
+
+        <div id="seeMoreWrapper" class="see-more-wrapper">
+            <a href="#" id="seeMoreBtn" class="see-more-btn">See More Shops in this Area</a>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <div class="footer-grid">
+        <div class="footer-col">
+            <h4>Local Mart</h4>
+            <p style="font-size: 0.9rem;">The digital bridge for local businesses in Taxila.</p>
+        </div>
+        <div class="footer-col">
+            <h4>Information</h4>
+            <ul>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="support.html">Support Page</a></li>
+                <li><a href="privacy.html">Privacy Policy</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>For Business</h4>
+            <ul>
+                <li><a href="register.html" style="color: var(--brand); font-weight: bold;">Register Your Shop</a></li>
+                <li><a href="team.html">Team</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">&copy; 2025 Local Mart Taxila.</div>
+</footer>
+
+<script>
+    const shops = [
+        { name: "Quetta Cafe (UET)", area: "uet-area", img: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&q=80&w=500" },
+        { name: "Kashmiri Hotel", area: "uet-area", img: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=500" },
+        { name: "UC/PC Printing", area: "uet-area", img: "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?q=80&w=500" },
+        { name: "Taxila Electronics", area: "main-bazaar", img: "https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&q=80&w=500" },
+        { name: "City Garments", area: "main-bazaar", img: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=500" },
+        { name: "Tehzeeb Bakers", area: "gt-road", img: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=80&w=500" },
+        { name: "Umar Electronics", area: "gt-road", img: "https://images.unsplash.com/photo-1550009158-9ebf69173e03?auto=format&fit=crop&q=80&w=500" },
+        { name: "Highway Mart", area: "gt-road", img: "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=500" },
+        { name: "Stone Crafts", area: "khanpur-rd", img: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&q=80&w=500" }
+    ];
+
+    function renderShops(list) {
+        const grid = document.getElementById('shopGrid');
+        grid.innerHTML = list.map(shop => `
+            <div class="shop-card">
+                <img class="shop-img" src="${shop.img}" alt="${shop.name}" loading="lazy" onerror="this.onerror=null;this.src='https://placehold.co/500x300/e5e7eb/6b7280?text=Shop+Image';">
+                <div class="shop-body">
+                    <span class="area-tag">${shop.area.replace('-', ' ')}</span>
+                    <h4 class="shop-name">${shop.name}</h4>
+                    <a href="shop-detail.html" class="visit-btn">Visit Shop</a>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function updateView() {
+        const selected = document.getElementById('streetSelect').value;
+        const seeMoreWrapper = document.getElementById('seeMoreWrapper');
+        const seeMoreBtn = document.getElementById('seeMoreBtn');
+
+        if (selected === 'all') {
+            renderShops(shops);
+            seeMoreWrapper.style.display = 'none';
+        } else {
+            const filtered = shops.filter(s => s.area === selected).slice(0, 3);
+            renderShops(filtered);
+            seeMoreWrapper.style.display = 'block';
+            seeMoreBtn.href = selected + ".html";
+            seeMoreBtn.innerText = "See More in " + selected.replace('-', ' ').toUpperCase();
+        }
+    }
+
+    renderShops(shops);
+</script>
+
+</body>
+</html>

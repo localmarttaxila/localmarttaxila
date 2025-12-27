@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Place Order | Local Mart</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛒</text></svg>">
+  <style>
+        :root { --brand: #10B981; --dark: #1F2937; --bg: #F9FAFB; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding: 20px; color: var(--dark); }
+        
+        .order-container { max-width: 800px; margin: 0 auto; display: grid; grid-template-columns: 1fr 350px; gap: 20px; }
+        @media (max-width: 768px) { .order-container { grid-template-columns: 1fr; } }
+
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        h2 { border-bottom: 2px solid var(--brand); padding-bottom: 10px; margin-top: 0; }
+        
+        .product-list { max-height: 600px; overflow-y: auto; padding-right: 10px; }
+        .item-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #eee; }
+        .item-info h4 { margin: 0; font-size: 1rem; }
+        .item-info p { margin: 0; color: var(--brand); font-weight: 700; font-size: 0.9rem; }
+        
+        input[type="number"] { width: 50px; padding: 5px; border: 1px solid #ddd; border-radius: 4px; text-align: center; }
+
+        .checkout-sidebar { position: sticky; top: 20px; height: fit-content; }
+        .total-box { background: var(--dark); color: white; padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 15px; }
+        .total-box h3 { margin: 0; font-size: 1.4rem; }
+
+        label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.85rem; margin-top: 10px; }
+        input[type="text"], select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 10px; box-sizing: border-box; }
+
+        #onlinePayDetails { background: #ecfdf5; border: 1px solid var(--brand); padding: 15px; border-radius: 8px; margin-bottom: 15px; display: none; }
+        .pay-number { color: #065f46; font-weight: 700; font-size: 1.1rem; display: block; margin: 5px 0; }
+
+        .confirm-btn { width: 100%; background: var(--brand); color: white; border: none; padding: 15px; border-radius: 6px; font-size: 1rem; font-weight: 700; cursor: pointer; }
+        .confirm-btn:disabled { background: #ccc; cursor: not-allowed; }
+
+        /* Success Message Styling */
+        #successState { display: none; text-align: center; padding: 40px 20px; }
+        .success-icon { font-size: 50px; color: var(--brand); margin-bottom: 20px; }
+        .receipt-summary { font-size: 0.85rem; background: #fef3c7; padding: 10px; border-radius: 6px; margin-bottom: 15px; border: 1px dashed #d97706; display: none; }
+    </style>
+</head>
+<body>
+
+<div id="mainOrderUI">
+    <div style="text-align: center; margin-bottom: 20px;">
+        <a href="index.html" style="text-decoration:none; color:var(--brand); font-weight:bold;">← Return to Main Market</a>
+    </div>
+
+    <div class="order-container">
+        <div class="card">
+            <h2>Available Items (20)</h2>
+            <div class="product-list" id="menu"></div>
+        </div>
+
+        <div class="checkout-sidebar">
+            <div class="card" id="formCard">
+                <div class="total-box">
+                    <h3>Total: Rs. <span id="grandTotal">0</span></h3>
+                </div>
+
+                <div id="receiptPreview" class="receipt-summary"></div>
+
+                <form id="orderForm">
+                    <label>Your Name</label>
+                    <input type="text" name="Customer_Name" required placeholder="Full Name">
+                    
+                    <label>Taxila Address</label>
+                    <textarea name="Address" required rows="2" placeholder="Street, House No, or Hostel Name"></textarea>
+                    
+                    <label>Payment Method</label>
+                    <select name="Payment" id="paymentMethod" onchange="toggleOnlinePay()" required>
+                        <option value="COD">Cash on Delivery</option>
+                        <option value="Online">Online Transfer (JazzCash/EasyPaisa)</option>
+                    </select>
+
+                    <div id="onlinePayDetails">
+                        <p style="margin:0; font-size:0.8rem; color:#065f46;">Transfer to:</p>
+                        <span class="pay-number">03235678922</span>
+                        <label style="display:flex; align-items:center; gap:8px; font-weight:normal;">
+                            <input type="checkbox" name="Paid_Status" value="Paid"> I have sent the payment
+                        </label>
+                    </div>
+
+                    <button type="submit" id="submitBtn" class="confirm-btn">Confirm Order</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="successState">
+    <div class="card" style="max-width: 500px; margin: 50px auto;">
+        <div class="success-icon">✔</div>
+        <h2 style="border:none;">Order Confirmed!</h2>
+        <p>Thank you for shopping with <strong>Local Mart Taxila</strong>.</p>
+        <p style="color: #666; font-size: 0.9rem;">The shop owner has been notified via email. Your order will be delivered shortly.</p>
+        <hr>
+        <div id="finalReceipt" style="text-align: left; background: #f9f9f9; padding: 15px; border-radius: 8px; margin: 20px 0;"></div>
+        <button onclick="window.location.href='index.html'" class="confirm-btn">Back to Home</button>
+    </div>
+</div>
+
+<script>
+    const allProducts = [
+        { n: "Special Mixed Tea", p: 80 }, { n: "Aloo Paratha", p: 110 },
+        { n: "Chicken Burger", p: 250 }, { n: "French Fries (L)", p: 150 },
+        { n: "Fresh Orange Juice", p: 180 }, { n: "Photocopy (B/W)", p: 5 },
+        { n: "Color Print (A4)", p: 50 }, { n: "Spiral Binding", p: 120 },
+        { n: "Ball Point Pen", p: 20 }, { n: "Writing Pad", p: 150 },
+        { n: "USB Drive 32GB", p: 950 }, { n: "Mobile Charging Cable", p: 300 },
+        { n: "Handsfree Earphones", p: 450 }, { n: "Bread (Large)", p: 190 },
+        { n: "Milk (1 Litre)", p: 210 }, { n: "Mineral Water (L)", p: 80 },
+        { n: "Stone Carving Decor", p: 1200 }, { n: "Handmade Shawl", p: 2500 },
+        { n: "Battery Cells (Pair)", p: 60 }, { n: "LED Bulb 12W", p: 350 }
+    ];
+
+    const menuDiv = document.getElementById('menu');
+    menuDiv.innerHTML = allProducts.map((prod) => `
+        <div class="item-row">
+            <div class="item-info">
+                <h4>${prod.n}</h4>
+                <p>Rs. ${prod.p}</p>
+            </div>
+            <input type="number" class="qty" data-name="${prod.n}" data-price="${prod.p}" value="0" min="0" onchange="updateCalc()">
+        </div>
+    `).join('');
+
+    function toggleOnlinePay() {
+        const method = document.getElementById('paymentMethod').value;
+        document.getElementById('onlinePayDetails').style.display = (method === 'Online') ? 'block' : 'none';
+    }
+
+    function updateCalc() {
+        let total = 0;
+        let summaryText = "";
+        const qtyInputs = document.querySelectorAll('.qty');
+        
+        qtyInputs.forEach(input => {
+            const q = parseInt(input.value);
+            if (q > 0) {
+                total += (q * parseInt(input.dataset.price));
+                summaryText += `${input.dataset.name} x${q} = Rs.${q * parseInt(input.dataset.price)}<br>`;
+            }
+        });
+
+        document.getElementById('grandTotal').innerText = total;
+        const preview = document.getElementById('receiptPreview');
+        preview.innerHTML = "<strong>Your Cart:</strong><br>" + summaryText;
+        preview.style.display = total > 0 ? 'block' : 'none';
+    }
+
+    // FORM HANDLING WITH AJAX
+    const orderForm = document.getElementById('orderForm');
+    orderForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const total = document.getElementById('grandTotal').innerText;
+        if(total === "0") return alert("Please select items first!");
+
+        const btn = document.getElementById('submitBtn');
+        btn.innerText = "Processing...";
+        btn.disabled = true;
+
+        const formData = new FormData(orderForm);
+        formData.append("Total_Amount", "Rs. " + total);
+        formData.append("Order_Details", document.getElementById('receiptPreview').innerText);
+
+        fetch("https://formspree.io/f/xeeqazwz", {
+            method: "POST",
+            body: formData,
+            headers: { 'Accept': 'application/json' }
+        }).then(response => {
+            if (response.ok) {
+                document.getElementById('mainOrderUI').style.display = 'none';
+                document.getElementById('successState').style.display = 'block';
+                document.getElementById('finalReceipt').innerHTML = `
+                    <strong>Customer:</strong> ${formData.get('Customer_Name')}<br>
+                    <strong>Total Bill:</strong> Rs. ${total}<br>
+                    <strong>Payment:</strong> ${formData.get('Payment')}
+                `;
+            } else {
+                alert("Error sending order. Please try again.");
+                btn.disabled = false;
+                btn.innerText = "Confirm Order";
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

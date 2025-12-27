@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Your Shop | Local Mart</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛒</text></svg>">
+  <style>
+        :root { --brand: #10B981; --dark: #1F2937; --bg: #F9FAFB; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding: 20px; }
+        
+        .form-container { max-width: 600px; margin: 40px auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        h2 { color: var(--dark); border-bottom: 3px solid var(--brand); padding-bottom: 10px; margin-bottom: 25px; }
+        
+        label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; }
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 20px; box-sizing: border-box; font-family: inherit; }
+        
+        .submit-btn { width: 100%; background: var(--brand); color: white; border: none; padding: 15px; border-radius: 8px; font-size: 1rem; font-weight: 700; cursor: pointer; }
+        .submit-btn:hover { background: #059669; }
+        .submit-btn:disabled { background: #ccc; }
+
+        #successMessage { display: none; text-align: center; padding: 40px 20px; }
+        .success-icon { font-size: 40px; color: var(--brand); margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+
+<div id="registrationUI" class="form-container">
+    <a href="index.html" style="text-decoration:none; color:var(--brand); font-weight:bold;">← Back to Mart</a>
+    <h2>Register Your Business</h2>
+    <p style="color:#666; margin-bottom:20px; font-size:0.9rem;">Fill this form to list your shop on Local Mart Taxila. We will contact you shortly.</p>
+
+    <form id="registrationForm">
+        <label>Shop Name</label>
+        <input type="text" name="Shop_Name" required placeholder="e.g. Taxila Sweets Center">
+
+        <label>Owner Name</label>
+        <input type="text" name="Owner_Name" required placeholder="Your full name">
+
+        <label>Contact Number (WhatsApp)</label>
+        <input type="text" name="Phone" required placeholder="03xx-xxxxxxx">
+
+        <label>Area / Street</label>
+        <select name="Area" required>
+            <option value="UET Area">UET Taxila Area</option>
+            <option value="Main Bazaar">Main Bazaar</option>
+            <option value="GT Road">GT Road / Wah Cantt</option>
+            <option value="Khanpur Road">Khanpur Road</option>
+        </select>
+
+        <label>Products You Sell</label>
+        <textarea name="Product_Description" rows="3" placeholder="List your main items and prices..."></textarea>
+
+        <label>Payment Account Number (For Online Pay)</label>
+        <input type="text" name="Account_Details" placeholder="EasyPaisa/JazzCash Number">
+
+        <button type="submit" id="regBtn" class="submit-btn">Submit Shop Details</button>
+    </form>
+</div>
+
+<div id="successMessage" class="form-container">
+    <div class="success-icon">🏢</div>
+    <h2>Request Received!</h2>
+    <p>Your shop details have been sent to the Local Mart administrator.</p>
+    <p style="color: #666; font-size: 0.9rem; margin-bottom: 30px;">We will review your information and add your page to the system soon.</p>
+    <button onclick="window.location.href='index.html'" class="submit-btn">Return to Home</button>
+</div>
+
+<script>
+    const regForm = document.getElementById('registrationForm');
+    regForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const btn = document.getElementById('regBtn');
+        btn.innerText = "Sending Request...";
+        btn.disabled = true;
+
+        const formData = new FormData(regForm);
+
+        fetch("https://formspree.io/f/xeeqazwz", {
+            method: "POST",
+            body: formData,
+            headers: { 'Accept': 'application/json' }
+        }).then(response => {
+            if (response.ok) {
+                document.getElementById('registrationUI').style.display = 'none';
+                document.getElementById('successMessage').style.display = 'block';
+            } else {
+                alert("Error submitting. Please check your internet.");
+                btn.disabled = false;
+                btn.innerText = "Submit Shop Details";
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
